@@ -21,42 +21,35 @@ trait OptionsInterface
 	def next: String
 }
 
-class Options( switchNames: List[String], argumentNames: List[String],
-	handlerMappings: List[(String, (String, OptionsInterface) => Unit)], defaults: (String, String)*)
-{	
-	private val switches = new HashMap[String, Boolean]
+class Options( switchNames: Seq[String], argumentNames: Seq[String],
+	handlerMappings: Seq[(String, (String, OptionsInterface) => Unit)], defaults: (String, String)*)
+{
+	private val switches = HashMap[String, Boolean]( switchNames map (_ -> false): _* )
 	private val arguments = Set( argumentNames:_* )
 	private val map = HashMap( defaults:_* )
 	private val handlers = HashMap( handlerMappings:_* )
 	
-	for (s <- switchNames)
-		switches += s -> false
+	require( switchNames.length == switches.size, "there are duplicate switch names" )
 	
-	if (switchNames.length > switches.size)
-		sys.error( "there are duplication switch names" )
+	require( argumentNames.length == arguments.size, "there are duplicate argument names" )
 	
-	if (argumentNames.length > arguments.size)
-		sys.error( "there are duplication argument names" )
+	require( handlerMappings.length == handlers.size, "there are duplicate handlers" )
 	
-	if (!(switches.keySet & arguments).isEmpty)
-		sys.error( "there is an argument in common with a switch" )
+	require( (switches.keySet & arguments) isEmpty, "there is an argument in common with a switch" )
 	
-	if (!(handlers.keySet & arguments).isEmpty)
-		sys.error( "there is a handler in common with an argument" )
+	require( (handlers.keySet & arguments) isEmpty, "there is a handler in common with an argument" )
 	
-	if (!(handlers.keySet & switches.keySet).isEmpty)
-		sys.error( "there is a handler in common with a switch" )
-		
-	for ((k, v) <- defaults)
-		if (!arguments( k )) sys.error( "unknown argument name: " + k )
-		
-	def set( name: String ) = switches( name )
+	require( (handlers.keySet & switches.keySet) isEmpty, "there is a handler in common with a switch" )
 	
-	def apply( name: String ) = map( name )
+	defaults find {case (k, _) => !(arguments contains k)} map {case (k, _) => sys.error( s"unknown argument '$k' in defaults: " )}
 	
-	def get( name: String ) = map get name
+	def set( name: String ): Boolean = switches( name )
 	
-	def parse( args: Array[String] ) =
+	def apply( name: String ): String = map( name )
+	
+	def get( name: String ): Option[String] = map get name
+	
+	def parse( args: Array[String] ): List[String] =
 	{
 	val result = new ListBuffer[String]
 	val it = args.iterator
@@ -70,7 +63,7 @@ class Options( switchNames: List[String], argumentNames: List[String],
 			def next = it.next
 		}
 		
-		while (it hasNext)	
+		while (it hasNext)
 		{
 		val s = it.next
 		
@@ -80,7 +73,7 @@ class Options( switchNames: List[String], argumentNames: List[String],
 			{
 				if (!it.hasNext) sys.error( "missing value for option: " + s )
 				
-				map += s -> it.next
+				map(s) = it.next
 			}
 			else if (handlers contains s)
 				handlers( s )( s, interface )
