@@ -1,13 +1,13 @@
 import AssemblyKeys._
 
-import LaikaKeys._
-
 
 name := "options"
 
 version := "0.1"
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.6"
+
+isSnapshot := true
 
 scalacOptions ++= Seq( "-deprecation", "-feature", "-language:postfixOps", "-language:implicitConversions", "-language:existentials" )
 
@@ -38,14 +38,12 @@ mainClass in assembly := Some( "ca.hyperreal.myproject.Main" )
 jarName in assembly := name.value + "-" + version.value + ".jar"
 
 
-LaikaPlugin.defaults
 
-templateDirectives in Laika += LaikaExtension.bootstrapToc
-
+seq(bintraySettings:_*)
 
 publishMavenStyle := true
 
-publishTo := Some( Resolver.sftp( "private", "hyperreal.ca", "/var/www/hyperreal.ca/maven2" ) )
+//publishTo := Some( Resolver.sftp( "private", "hyperreal.ca", "/var/www/hyperreal.ca/maven2" ) )
 
 //{
 //  val nexus = "https://oss.sonatype.org/"
