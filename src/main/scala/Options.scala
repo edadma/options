@@ -1,4 +1,4 @@
-package ca.hyperreal.options
+package xyz.hyperreal.options
 
 import scala.collection.mutable.{ListBuffer, Buffer, Map => MutableMap, HashMap}
 

@@ -1,11 +1,8 @@
-import AssemblyKeys._
-
-
 name := "options"
 
 version := "0.1"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.8"
 
 isSnapshot := true
 
@@ -13,7 +10,7 @@ scalacOptions ++= Seq( "-deprecation", "-feature", "-language:postfixOps", "-lan
 
 incOptions := incOptions.value.withNameHashing( true )
 
-organization := "ca.hyperreal"
+organization := "xyz.hyperreal"
 
 //resolvers += Resolver.sonatypeRepo( "snapshots" )
 
@@ -25,21 +22,12 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.3" % "test"
 
 libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.11.5" % "test"
 
-//mainClass in (Compile, packageBin) := Some( "ca.hyperreal.myproject.Main" )
+mainClass in (Compile, run) := Some( "xyz.hyperreal." + name.value + ".Main" )
 
-mainClass in (Compile, run) := Some( "ca.hyperreal.options.TestMain" )
+mainClass in assembly := Some( "xyz.hyperreal." + name.value + ".Main" )
 
-//offline := true
+assemblyJarName in assembly := name.value + "-" + version.value + ".jar"
 
-assemblySettings
-
-mainClass in assembly := Some( "ca.hyperreal.myproject.Main" )
-
-jarName in assembly := name.value + "-" + version.value + ".jar"
-
-
-
-seq(bintraySettings:_*)
 
 publishMavenStyle := true
 
