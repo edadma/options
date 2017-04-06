@@ -1,8 +1,10 @@
 name := "options"
 
-version := "0.1"
+version := "0.2"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.1"
+
+crossScalaVersions := Seq( "2.11.8" )
 
 isSnapshot := true
 
@@ -18,9 +20,10 @@ resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/release
 
 resolvers += "Hyperreal Repository" at "http://hyperreal.ca/maven2"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.3" % "test"
-
-libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.11.5" % "test"
+libraryDependencies ++= Seq(
+	"org.scalatest" %% "scalatest" % "3.0.0" % "test",
+	"org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
+)
 
 mainClass in (Compile, run) := Some( "xyz.hyperreal." + name.value + ".Main" )
 
@@ -49,7 +52,7 @@ licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT"))
 
 homepage := Some(url("https://github.com/edadma/options"))
 
-pomExtra := (
+pomExtra :=
   <scm>
     <url>git@github.com:edadma/options.git</url>
     <connection>scm:git:git@github.com:edadma/options.git</connection>
@@ -60,4 +63,4 @@ pomExtra := (
       <name>Edward A. Maxedon, Sr.</name>
       <url>http://hyperreal.ca</url>
     </developer>
-  </developers>)
+  </developers>
