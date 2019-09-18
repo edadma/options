@@ -84,5 +84,5 @@ class Options( switchNames: Seq[String], argumentNames: Seq[String],
 		result.toList
 	}
 	
-	override def toString = "switches " + switches + ";  arguments " + map
+	override def toString = "switches " + switches.toList.sortBy( _._1 ).toMap + ";  arguments " + map.toList.sortBy( _._1 ).toMap
 }
